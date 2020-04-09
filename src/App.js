@@ -4,6 +4,7 @@ import './App.css';
 import Header from "./Header";
 import Tabela from "./Tabela";
 import Form from "./Fomulario";
+import PopUp from './PopUp';
 
 class App extends Component {
 
@@ -49,11 +50,13 @@ class App extends Component {
         }),
       }
     )
+    PopUp.exibeMensagem("success", "Autor Removido com Sucesso!");
 
   }
 
   escutadorDeSubmit = autor => {
     this.setState({ autores: [...this.state.autores, autor] })
+    PopUp.exibeMensagem("success", "Autor adicionado com sucesso!");
   }
 
   render() {
@@ -62,6 +65,7 @@ class App extends Component {
       <Fragment>
         <Header />
         <div className="container mb-10">
+        <h1>Casa do Código</h1>
         <Tabela autores={this.state.autores} removeAutor={this.removeAutor} />
         <Form escutadorDeSubmit={this.escutadorDeSubmit} />
         </div>

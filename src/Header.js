@@ -1,14 +1,15 @@
 import React from 'react'
+import LinkWrapper from './LinkWrapper'
 
 const Header = () => {
     return (
         <nav>
             <div className="nav-wrapper indigo lighten-2">
-                <a href="#" className="brand-logo">Casa do Código</a>
+                <LinkWrapper to="/" className="brand-logo">Casa do Código</LinkWrapper>
                 <ul className="right">
-                    <li><a href="#">Autores</a></li>
-                    <li><a href="#">Livros</a></li>
-                    <li><a href="#">Sobre</a></li>
+                    <li><LinkWrapper to="/autores">Autores</LinkWrapper></li>
+                    <li><LinkWrapper to="/livros">Livros</LinkWrapper></li>
+                    <li><LinkWrapper to="/sobre">Sobre</LinkWrapper></li>
                 </ul>
             </div>
         </nav>
