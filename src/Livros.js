@@ -17,7 +17,6 @@ class Livros extends Component {
 
     componentDidMount() {
         ApiServices.ListaLivros()
-        .then(res => ApiServices.TrataErros(res))
         .then(res => {
             if(res.message === 'success'){
             PopUp.exibeMensagem('success', 'Livros listados com sucesso')

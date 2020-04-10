@@ -28,7 +28,7 @@ class App extends Component {
     });
 
     
-    ApiServices.RemoveAutor(index).then(res => ApiServices.TrataErros(res)).then(
+    ApiServices.RemoveAutor(index).then(
       res => {
         if(res.message === 'deleted'){
           this.setState({
@@ -47,7 +47,7 @@ class App extends Component {
 
   escutadorDeSubmit = autor => {
 
-    ApiServices.CriaAutor(JSON.stringify(autor)).then(res => ApiServices.TrataErros(res)).then(res => {
+    ApiServices.CriaAutor(JSON.stringify(autor)).then(res => {
       if(res.message === 'success'){
 
         this.setState({ autores: [...this.state.autores, res.data] })
@@ -63,7 +63,6 @@ class App extends Component {
   componentDidMount() {
 
     ApiServices.ListaAutores()
-    .then(res => ApiServices.TrataErros(res))
     .then(res => {
       if(res.message === 'success'){
         this.setState({autores: [...this.state.autores, ...res.data]})
