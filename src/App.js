@@ -23,34 +23,55 @@ class App extends Component {
 
     const { autores } = this.state;
 
-    this.setState(
-      {
-        autores: autores.filter((autor) => {
-          return autor.id !== index;
-        }),
+    const autoresAtualizados = autores.filter(autor => {
+      return autor.id !== index;
+    });
+
+    
+    ApiServices.RemoveAutor(index).then(res => ApiServices.TrataErros(res)).then(
+      res => {
+        if(res.message === 'deleted'){
+          this.setState({
+            autores: [...autoresAtualizados]
+          });
+          
+          PopUp.exibeMensagem("success", "Autor Removido com Sucesso!");
+        }
       }
-    )
-    ApiServices.RemoveAutor(index);
-    PopUp.exibeMensagem("success", "Autor Removido com Sucesso!");
+    ).catch(err => {
+      PopUp.exibeMensagem("error", "Erro na comunicação com o Servidor")
+      console.log(err);
+    });
 
   }
 
   escutadorDeSubmit = autor => {
 
-    ApiServices.CriaAutor(JSON.stringify(autor)).then(res => res.data).then(autor => {
+    ApiServices.CriaAutor(JSON.stringify(autor)).then(res => ApiServices.TrataErros(res)).then(res => {
+      if(res.message === 'success'){
 
-      this.setState({ autores: [...this.state.autores, autor] })
-      PopUp.exibeMensagem("success", "Autor adicionado com sucesso!");
+        this.setState({ autores: [...this.state.autores, res.data] })
+        PopUp.exibeMensagem("success", "Autor adicionado com sucesso!");
+      }
+    }).catch(err => {
+      PopUp.exibeMensagem("error", "Erro na comunicação com o Servidor")
+      console.log(err);
     });
 
   }
 
   componentDidMount() {
 
-    ApiServices.ListaAutores().then(res => {
-      this.setState({
-        autores: [...this.state.autores, ...res.data]
-      });
+    ApiServices.ListaAutores()
+    .then(res => ApiServices.TrataErros(res))
+    .then(res => {
+      if(res.message === 'success'){
+        this.setState({autores: [...this.state.autores, ...res.data]})
+      } 
+    })
+    .catch(err =>{
+      PopUp.exibeMensagem('error', "Erro na comunicação com a API ao tentar listar os autores")
+      console.log(err);
     });
   }
 

@@ -2,6 +2,7 @@ import React, { Fragment, Component } from 'react';
 import Header from './Header';
 import DataTable from './DataTable';
 import ApiServices from './ApiService';
+import PopUp from './PopUp';
 
 class Autores extends Component {
 
@@ -15,11 +16,15 @@ class Autores extends Component {
     }
 
     componentDidMount() {
-        ApiServices.ListaAutores().then(res => {
-            this.setState({
-                nomes: [...this.state.nomes, ...res.data]
-            });
-        });
+        ApiServices.ListaNomes()
+        .then(res => ApiServices.TrataErros(res))
+        .then(res => {
+            if(res.message === 'success'){
+            PopUp.exibeMensagem('success', 'Autores listados com sucesso')
+            this.setState({nomes: [...this.state.nomes, ...res.data]})
+            } 
+        })
+        .catch(err => PopUp.exibeMensagem('error', 'Falha na comunicação com a API ao listar os autores'));
     }
 
 
