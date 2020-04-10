@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react';
-import Header from './Header';
-import DataTable from './DataTable';
-import PopUp from './PopUp';
-import ApiServices from './ApiService';
+import Header from '../../Components/Header/Header';
+import DataTable from '../../Components/DataTable/DataTable';
+import PopUp from '../../Utils/PopUp';
+import ApiServices from '../../Utils/ApiService';
 
 
 class Livros extends Component {

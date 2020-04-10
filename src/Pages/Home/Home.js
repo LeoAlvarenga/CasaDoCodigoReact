@@ -1,13 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import 'materialize-css/dist/css/materialize.min.css';
-import './App.css';
-import Header from "./Header";
-import Tabela from "./Tabela";
-import Form from "./Fomulario";
-import PopUp from './PopUp';
-import ApiServices from './ApiService';
+import './Home.css';
+import Header from "../../Components/Header/Header";
+import Tabela from "../../Components/Tabela/Tabela";
+import Form from "../../Components/Formulario/Fomulario";
+import PopUp from '../../Utils/PopUp';
+import ApiServices from '../../Utils/ApiService';
 
-class App extends Component {
+class Home extends Component {
 
   constructor(props) {
     super(props);
@@ -94,4 +94,4 @@ class App extends Component {
 
 }
 
-export default App;
+export default Home;
