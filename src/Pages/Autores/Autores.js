@@ -2,7 +2,7 @@ import React, { Fragment, Component } from 'react';
 import Header from '../../Components/Header/Header';
 import Tabela from '../../Components/Tabela/Tabela';
 import ApiServices from '../../Utils/ApiService';
-import PopUp from '../../Utils/PopUp';
+import Toast from '../../Components/Toast/Toast'
 
 class Autores extends Component {
 
@@ -10,7 +10,10 @@ class Autores extends Component {
         super(props);
 
         this.state = {
-            nomes: []
+            nomes: [],
+            open: false,
+            severity: '',
+            toastMessage: ''
         };
     }
     
@@ -18,11 +21,21 @@ class Autores extends Component {
         ApiServices.ListaNomes()
         .then(res => {
             if(res.message === 'success'){
-                PopUp.exibeMensagem('success', 'Autores listados com sucesso')
+                this.setState({
+                    open: true,
+                    severity: 'success',
+                    toastMessage: 'Autores Listados com Sucesso'
+                });
                 this.setState({nomes: [...this.state.nomes, ...res.data]})
             } 
         })
-        .catch(err => PopUp.exibeMensagem('error', 'Falha na comunicação com a API ao listar os autores'));
+        .catch(err => {
+            console.log(err);
+            this.setState({
+            open: true,
+            severity: 'error',
+            toastMessage: 'Falha na Conexão com o Servidor'
+        })});
     }
     
     
@@ -33,6 +46,9 @@ class Autores extends Component {
 
         <Fragment>
             <Header></Header>
+            <Toast open={this.state.open} severity={this.state.severity} handleClose={() => this.setState({ open: false })}>
+                {this.state.toastMessage}
+            </Toast>
             <div className='container'>
                     <h1>Página de Autores</h1>
                     <Tabela dados={this.state.nomes} campos={campos}/>

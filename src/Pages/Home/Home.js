@@ -4,8 +4,8 @@ import './Home.css';
 import Header from "../../Components/Header/Header";
 import Tabela from "../../Components/Tabela/Tabela";
 import Form from "../../Components/Formulario/Fomulario";
-import PopUp from '../../Utils/PopUp';
 import ApiServices from '../../Utils/ApiService';
+import Toast from '../../Components/Toast/Toast';
 
 class Home extends Component {
 
@@ -14,7 +14,10 @@ class Home extends Component {
 
 
     this.state = {
-      autores: []
+      autores: [],
+      open: false,
+      severity: '',
+      toastMessage: ''
     };
   }
 
@@ -27,19 +30,27 @@ class Home extends Component {
       return autor.id !== index;
     });
 
-    
+
     ApiServices.RemoveAutor(index).then(
       res => {
-        if(res.message === 'deleted'){
+        if (res.message === 'deleted') {
           this.setState({
             autores: [...autoresAtualizados]
           });
-          
-          PopUp.exibeMensagem("success", "Autor Removido com Sucesso!");
+
+          this.setState({
+            open: true,
+            severity: 'success',
+            toastMessage: 'Autor removido com Sucesso'
+          });
         }
       }
     ).catch(err => {
-      PopUp.exibeMensagem("error", "Erro na comunicação com o Servidor")
+      this.setState({
+        open: true,
+        severity: 'error',
+        toastMessage: 'Não foi possível remover o Autor'
+      });
       console.log(err);
     });
 
@@ -48,13 +59,21 @@ class Home extends Component {
   escutadorDeSubmit = autor => {
 
     ApiServices.CriaAutor(JSON.stringify(autor)).then(res => {
-      if(res.message === 'success'){
+      if (res.message === 'success') {
 
         this.setState({ autores: [...this.state.autores, res.data] })
-        PopUp.exibeMensagem("success", "Autor adicionado com sucesso!");
+        this.setState({
+          open: true,
+          severity: 'success',
+          toastMessage: 'Autor adicionado com Sucesso'
+        });
       }
     }).catch(err => {
-      PopUp.exibeMensagem("error", "Erro na comunicação com o Servidor")
+      this.setState({
+        open: true,
+        severity: 'error',
+        toastMessage: 'Não foi possível adicionar o Autor'
+      });
       console.log(err);
     });
 
@@ -63,15 +82,19 @@ class Home extends Component {
   componentDidMount() {
 
     ApiServices.ListaAutores()
-    .then(res => {
-      if(res.message === 'success'){
-        this.setState({autores: [...this.state.autores, ...res.data]})
-      } 
-    })
-    .catch(err =>{
-      PopUp.exibeMensagem('error', "Erro na comunicação com a API ao tentar listar os autores")
-      console.log(err);
-    });
+      .then(res => {
+        if (res.message === 'success') {
+          this.setState({ autores: [...this.state.autores, ...res.data] })
+        }
+      })
+      .catch(err => {
+        this.setState({
+          open: true,
+          severity: 'error',
+          toastMessage: 'Erro na comunicação com a API ao tentar listar os autores'
+        });
+        console.log(err);
+      });
   }
 
   render() {
@@ -79,19 +102,22 @@ class Home extends Component {
     ApiServices.ListaNomes().then(res => console.log(res.data));
 
     const campos = [
-      { titulo: 'Autores', dado: 'nome'}, 
-      { titulo: 'Livros', dado: 'livro'}, 
-      { titulo: 'Preço', dado: 'preco'},
+      { titulo: 'Autores', dado: 'nome' },
+      { titulo: 'Livros', dado: 'livro' },
+      { titulo: 'Preço', dado: 'preco' },
     ];
 
 
     return (
       <Fragment>
         <Header />
+        <Toast open={this.state.open} severity={this.state.severity} handleClose={() => this.setState({ open: false })}>
+          {this.state.toastMessage}
+        </Toast>
         <div className="container mb-10">
-        <h1>Casa do Código</h1>
-        <Tabela campos={campos} dados={this.state.autores} removeDados={this.removeAutor} />
-        <Form escutadorDeSubmit={this.escutadorDeSubmit} />
+          <h1>Casa do Código</h1>
+          <Form escutadorDeSubmit={this.escutadorDeSubmit} />
+          <Tabela campos={campos} dados={this.state.autores} removeDados={this.removeAutor} />
         </div>
       </Fragment>
     );
