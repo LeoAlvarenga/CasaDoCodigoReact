@@ -10,12 +10,7 @@ import Paper from '@material-ui/core/Paper';
 
 
 
-const CellDeleta = ({removeDados, id, titulo}) => {
-    if(titulo){
-        return (
-            <TableCell>Remover</TableCell>
-        )
-    }
+const CellDeleta = ({removeDados, id}) => {
     if (!removeDados) {
         return null;
     }
@@ -31,6 +26,15 @@ const CellDeleta = ({removeDados, id, titulo}) => {
                     Remover
                 </Button>
             </TableCell>)
+}
+
+const TituloDeleta = ({removeDados}) => {
+    if (!removeDados) {
+        return null;
+    }
+    return(
+        <TableCell>Remover</TableCell>
+    )
 }
 
 const Tabela = props => {
@@ -49,7 +53,7 @@ const Tabela = props => {
                             <TableCell>{campo.titulo}</TableCell>
                         )
                     }
-                    <CellDeleta titulo />
+                    <TituloDeleta removeDados={removeDados} />
                 </TableRow>
             </TableHead>
             <TableBody>
