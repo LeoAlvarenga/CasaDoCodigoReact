@@ -56,7 +56,13 @@ class Home extends Component {
 
   }
 
-  escutadorDeSubmit = autor => {
+  escutadorDeSubmit = dados => {
+
+    const autor = {
+      nome: dados.nome,
+      livro: dados.livro,
+      preco: dados.preco
+    }
 
     ApiServices.CriaAutor(JSON.stringify(autor)).then(res => {
       if (res.message === 'success') {
